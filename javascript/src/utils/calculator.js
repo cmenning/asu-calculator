@@ -30,7 +30,7 @@ export function calculateCollectionRate(inventory) {
   const dailyRate = techScrapCollected / daysElapsed;
   
   // Calculate scav runs per day
-  const expectedPerRun = calculateExpectedMedTechPerRun();
+  const expectedPerRun = calculateExpectedMedTechPerRun(inventory.scav_level);
   const scavRunsPerDay = dailyRate / (expectedPerRun * CONVERSIONS.recycle_ratio);
   
   return {
@@ -64,7 +64,7 @@ export function calculateResultsData(inventory) {
   let scavTimeGathering = null;
   if (remainingMtcNeeded > 0) {
     const medTechNeeded = remainingMtcNeeded * CONVERSIONS.med_tech_per_cluster;
-    scavTimeGathering = calculateScavTime(medTechNeeded);
+    scavTimeGathering = calculateScavTime(medTechNeeded, inventory.scav_level);
   }
   
   // Remaining bags to craft
@@ -106,7 +106,7 @@ export function calculateResultsData(inventory) {
   let scavTimeBagCrafter = null;
   if (mtcCostForDoras > 0) {
     const medTechForPurchase = mtcCostForDoras * CONVERSIONS.med_tech_per_cluster;
-    scavTimeBagCrafter = calculateScavTime(medTechForPurchase);
+    scavTimeBagCrafter = calculateScavTime(medTechForPurchase, inventory.scav_level);
   }
   
   // After buying Doras calculations

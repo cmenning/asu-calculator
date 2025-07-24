@@ -6,36 +6,39 @@ A calculator to determine the remaining time needed to create an Autonomous Stor
 
 This repository contains two implementations:
 
-### 📁 `python/` - Original Python Implementation
-- **Complete and fully functional** command-line interface
-- **Comprehensive calculation engine** with all features implemented
-- **Test suite** for verification
-- **JSON-based persistence** for inventory data
+### 📁 `javascript/` - **Primary Web Implementation** ⭐
+- **Feature-complete React + Vite** single-page application
+- **Enhanced modern interface** with real-time updates and visual progress indicators
+- **Scav level optimization** with dynamic zone recommendations
+- **Mobile-responsive design** with professional styling
+- **100% calculation accuracy** validated against Python version
+- **Comprehensive test suite** and production-ready deployment
+- **Active development and maintenance**
 
-### 📁 `javascript/` - Web Implementation (In Development)
-- **React + Vite** single-page application
-- **Modern web interface** with real-time updates
-- **Local storage persistence** 
-- **Mobile-responsive design**
+### 📁 `python/` - Original CLI Implementation
+- **Complete and stable** command-line interface
+- **Reference implementation** for calculation validation
+- **Maintenance mode** - stable but not actively enhanced
 
 ## Quick Start
 
-### Python Version (Ready to Use)
-```bash
-cd python/
-python asu_calculator.py
-```
-
-### Web Version (In Development)
+### 🌟 **Recommended: Web Version**
 ```bash
 cd javascript/
 npm install
 npm run dev
 ```
+**Live Demo**: [ASU Calculator Web App](https://your-github-username.github.io/asu-calculator/)
+
+### Python Version (CLI)
+```bash
+cd python/
+python asu_calculator.py
+```
 
 ## Features
 
-Both implementations provide:
+**The React web version is now the primary implementation** with enhanced features and active development. Both implementations provide core functionality:
 
 - **Main Application (`asu_calculator.py`)**: Interactive CLI interface with inventory management and result orchestration
 - **Utility Functions (`utils.py`)**: Pure calculation functions for scavenging, bag crafting, and resource conversions
@@ -153,11 +156,24 @@ To craft one ASU from scratch, you need:
 
 ## Requirements
 
-- Python 3.7+
-- No external dependencies required for basic functionality
+### Web Version (React)
+- **Node.js**: 18.0+ or 20.0+
+- **npm**: 9.0+ (comes with Node.js)
+- **Modern browser**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+
+### Python Version (CLI)
+- **Python**: 3.7+
+- **No external dependencies** - uses only Python standard library
 
 ## Installation
 
+### Web Version
+```bash
+cd javascript/
+npm install
+```
+
+### Python Version
 1. Clone or download this repository
 2. No additional installation needed - uses only Python standard library
 

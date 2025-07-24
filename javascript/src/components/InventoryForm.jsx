@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { getBestScavZone } from '../utils/scavenging.js';
+import { SCAVENGING } from '../config/gameConfig.js';
 
 const InputGroup = ({ label, field, value, placeholder = "0", onChange, error, formatNumber }) => {
   const isOverLimit = field !== 'bitcoin' && value > 10000;
@@ -9,15 +11,16 @@ const InputGroup = ({ label, field, value, placeholder = "0", onChange, error, f
       <input
         key={field}
         id={field}
-        type="number"
-        value={value || 0}
-        onChange={(e) => onChange(field, e.target.value)}
+        type="text"
+        value={formatNumber(value)}
+        onChange={(e) => {
+          const numericValue = e.target.value.replace(/,/g, '');
+          onChange(field, numericValue);
+        }}
         placeholder={placeholder}
-        min="0"
         className={error ? 'error' : (isOverLimit ? 'warning' : '')}
       />
       {isOverLimit && <span className="warning-symbol">⚠️</span>}
-      <span className="formatted-value">{formatNumber(value)}</span>
       {error && <span className="error-message">{error}</span>}
     </div>
   );
@@ -35,7 +38,12 @@ const InventoryForm = ({ inventory, onInventoryChange, estimateCompletion, onEst
     // Validate numeric fields
     if (field !== 'start_date') {
       const numValue = parseInt(value) || 0;
-      if (numValue < 0) {
+      if (field === 'scav_level') {
+        if (numValue < 1 || numValue > 1000) {
+          setErrors(prev => ({ ...prev, [field]: 'Scav level must be between 1 and 1000' }));
+          return;
+        }
+      } else if (numValue < 0) {
         setErrors(prev => ({ ...prev, [field]: 'Value cannot be negative' }));
         return;
       }
@@ -72,6 +80,53 @@ const InventoryForm = ({ inventory, onInventoryChange, estimateCompletion, onEst
       </div>
 
       <div className="form-section">
+        <h3>🏔️ Scav Zone</h3>
+        <div className="input-group">
+          <label htmlFor="scav_level">Your Scav Level:</label>
+          <div className="level-input-container">
+            <input
+              id="scav_level"
+              type="text"
+              value={formatNumber(inventory.scav_level)}
+              onChange={(e) => {
+                const numericValue = e.target.value.replace(/,/g, '');
+                handleChange('scav_level', numericValue);
+              }}
+              placeholder="1"
+              className={errors.scav_level ? 'error' : ''}
+            />
+            <div className="level-arrows">
+              <button 
+                type="button" 
+                className="level-arrow up" 
+                onClick={() => handleChange('scav_level', Math.min(1000, (inventory.scav_level || 1) + 1))}
+              >
+                ▲
+              </button>
+              <button 
+                type="button" 
+                className="level-arrow down" 
+                onClick={() => handleChange('scav_level', Math.max(1, (inventory.scav_level || 1) - 1))}
+              >
+                ▼
+              </button>
+            </div>
+          </div>
+          {errors.scav_level && <span className="error-message">{errors.scav_level}</span>}
+        </div>
+        {(() => {
+          const bestZone = getBestScavZone(inventory.scav_level || 1);
+          const expectedPerRun = Math.round(SCAVENGING.max_units_per_run * bestZone.expectedYield);
+          return (
+            <div className="scav-zone-info">
+              Your best scav zone: {bestZone.level}<br/>
+              Expected med tech per full run: {expectedPerRun}
+            </div>
+          );
+        })()}
+      </div>
+
+      <div className="form-section">
         <h3>💰 Bag Buying</h3>
         <InputGroup label="Dora Cost (MTC)" field="dora_cost_mtc" value={inventory.dora_cost_mtc} onChange={handleChange} error={errors.dora_cost_mtc} formatNumber={formatNumber} />
       </div>
@@ -80,12 +135,11 @@ const InventoryForm = ({ inventory, onInventoryChange, estimateCompletion, onEst
         <h3>📅 Collection Tracking</h3>
         <div className="input-group">
           <label htmlFor="estimate_completion">Estimate completion date:</label>
-          <input
-            id="estimate_completion"
-            type="checkbox"
-            checked={estimateCompletion}
-            onChange={(e) => onEstimateCompletionChange(e.target.checked)}
-          />
+          <div className="toggle-slider" onClick={() => onEstimateCompletionChange(!estimateCompletion)}>
+            <div className={`toggle-track ${estimateCompletion ? 'active' : ''}`}>
+              <div className="toggle-thumb"></div>
+            </div>
+          </div>
         </div>
         {estimateCompletion && (
           <div className="input-group">

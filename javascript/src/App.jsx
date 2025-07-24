@@ -8,7 +8,14 @@ import './App.css'
 function App() {
   const [inventory, setInventory] = useState(() => loadInventory())
   const [results, setResults] = useState(null)
-  const [estimateCompletion, setEstimateCompletion] = useState(true)
+  const [estimateCompletion, setEstimateCompletion] = useState(() => {
+    try {
+      const saved = localStorage.getItem('asu_estimate_completion');
+      return saved ? JSON.parse(saved) : false;
+    } catch {
+      return false;
+    }
+  })
 
   // Calculate results whenever inventory changes
   useEffect(() => {
@@ -25,6 +32,11 @@ function App() {
     }))
   }
 
+  const handleEstimateCompletionChange = (value) => {
+    setEstimateCompletion(value)
+    localStorage.setItem('asu_estimate_completion', JSON.stringify(value))
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -38,7 +50,7 @@ function App() {
             inventory={inventory} 
             onInventoryChange={handleInventoryChange}
             estimateCompletion={estimateCompletion}
-            onEstimateCompletionChange={setEstimateCompletion}
+            onEstimateCompletionChange={handleEstimateCompletionChange}
           />
           
           <ResultsDisplay results={results} estimateCompletion={estimateCompletion} inventory={inventory} />

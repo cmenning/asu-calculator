@@ -11,7 +11,8 @@ export const DEFAULT_INVENTORY = {
   explorer_backpacks: 0,
   employee_office_cases: 0,
   asus: 0,
-  dora_cost_mtc: 15,
+  scav_level: 1,
+  dora_cost_mtc: 20,
   start_date: new Date().toISOString().split('T')[0]
 };
 
@@ -68,13 +69,15 @@ export function validateInventory(inventory) {
   const numericFields = [
     'tech_scraps', 'tech_scrap_clusters', 'med_tech', 'med_tech_clusters',
     'bitcoin', 'old_pouches', 'fanny_packs', 'explorer_backpacks',
-    'employee_office_cases', 'asus', 'dora_cost_mtc'
+    'employee_office_cases', 'asus', 'scav_level', 'dora_cost_mtc'
   ];
   
   numericFields.forEach(field => {
     const value = Number(inventory[field]);
     if (field === 'dora_cost_mtc') {
-      validated[field] = isNaN(value) || value <= 0 ? 15 : value;
+      validated[field] = isNaN(value) || value <= 0 ? 20 : value;
+    } else if (field === 'scav_level') {
+      validated[field] = isNaN(value) || value < 1 ? 1 : Math.min(1000, Math.floor(value));
     } else {
       validated[field] = isNaN(value) || value < 0 ? 0 : Math.floor(value);
     }

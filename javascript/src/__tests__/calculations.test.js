@@ -46,14 +46,14 @@ describe('Core Calculations', () => {
   });
 
   it('should calculate expected med tech per run correctly', () => {
-    const expected = calculateExpectedMedTechPerRun();
+    const expected = calculateExpectedMedTechPerRun(197); // Level 197 matches old hardcoded values
     
-    // 12 * 0.7252 * 57 ≈ 496.4
-    expect(expected).toBeCloseTo(496.4, 1);
+    // 12 * 41.34 ≈ 496.1
+    expect(expected).toBeCloseTo(496.1, 1);
   });
 
   it('should calculate scav time correctly', () => {
-    const scavTime = calculateScavTime(1000);
+    const scavTime = calculateScavTime(1000, 197);
     
     // Should calculate based on expected med tech per run and 3 hour runs
     expect(scavTime.hours_no_syn).toBeGreaterThan(0);
@@ -101,6 +101,7 @@ describe('Collection Rate Tracking', () => {
     const testInventory = {
       tech_scraps: 1000,
       med_tech: 2000,
+      scav_level: 197,
       start_date: '2024-01-01'
     };
     
@@ -200,9 +201,6 @@ describe('Configuration Validation', () => {
 
   it('should have valid scavenging settings', () => {
     expect(SCAVENGING.max_units_per_run).toBeGreaterThan(0);
-    expect(SCAVENGING.med_tech_drop_chance).toBeGreaterThan(0);
-    expect(SCAVENGING.med_tech_drop_chance).toBeLessThanOrEqual(1);
-    expect(SCAVENGING.med_tech_per_drop).toBeGreaterThan(0);
     expect(SCAVENGING.run_time_hours).toBeGreaterThan(0);
   });
 });
@@ -220,6 +218,7 @@ describe('Full Integration', () => {
       explorer_backpacks: 98,
       employee_office_cases: 1,
       asus: 0,
+      scav_level: 197,
       start_date: '2024-01-01'
     };
     
@@ -237,6 +236,7 @@ describe('Full Integration', () => {
   it('should handle inventory with completed ASU', () => {
     const completedInventory = {
       asus: 1,
+      scav_level: 1,
       start_date: '2024-01-01'
     };
     
@@ -256,7 +256,7 @@ describe('Edge Cases', () => {
   });
 
   it('should handle zero med tech needed for scav time', () => {
-    const scavTime = calculateScavTime(0);
+    const scavTime = calculateScavTime(0, 1);
     
     expect(scavTime.hours_no_syn).toBe(0);
     expect(scavTime.hours_with_syn).toBe(0);

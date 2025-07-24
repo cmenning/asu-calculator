@@ -112,7 +112,7 @@ const ResultsDisplay = ({ results, estimateCompletion, inventory }) => {
       <div className="results-section">
         <SectionHeader emoji="⏰" title="REMAINING GATHERING REQUIREMENTS" />
         <div className="requirement-item">
-          <span>Tech Scraps (equivalent):</span>
+          <span>Tech Scraps:</span>
           <span>{formatNumber(results.remaining_gathering.tech_scraps)}</span>
         </div>
         <div className="requirement-item">
@@ -191,14 +191,14 @@ const ResultsDisplay = ({ results, estimateCompletion, inventory }) => {
           // Calculate MTC on hand and to be scavenged
           const currentMedTech = Number(inventory?.med_tech || 0);
           const currentMtc = Number(inventory?.med_tech_clusters || 0);
-          const doraCostMtc = Number(inventory?.dora_cost_mtc || 15);
+          const doraCostMtc = Number(inventory?.dora_cost_mtc || 20);
           console.log('Debug MTC calc:', { currentMedTech, currentMtc, inventory, CONVERSIONS });
           const mtcOnHand = currentMtc + (currentMedTech / CONVERSIONS.med_tech_per_cluster);
           const mtcToScavenge = Math.max(0, results.bag_crafter_service.mtc_cost - mtcOnHand);
           
           // Calculate scav time and BTC clustering based on mtc_to_scavenge
           const medTechToScavenge = mtcToScavenge * CONVERSIONS.med_tech_per_cluster;
-          const scavTimeForMtc = medTechToScavenge > 0 ? calculateScavTime(medTechToScavenge) : null;
+          const scavTimeForMtc = medTechToScavenge > 0 ? calculateScavTime(medTechToScavenge, inventory?.scav_level || 1) : null;
           const btcForClustering = mtcToScavenge * CONVERSIONS.cluster_cost_mtc;
           
           return (
