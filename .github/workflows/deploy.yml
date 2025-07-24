@@ -28,7 +28,7 @@ jobs:
         run: npm ci
         working-directory: ./javascript
       - name: Build
-        run: npm run build
+        run: GITHUB_PAGES=true npm run build
         working-directory: ./javascript
       - name: Copy built files to root
         run: |

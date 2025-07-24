@@ -36,6 +36,9 @@ wheels/
 *.egg
 MANIFEST
 
+# Vite build artifacts
+javascript/dist/
+
 # PyInstaller
 *.manifest
 *.spec
