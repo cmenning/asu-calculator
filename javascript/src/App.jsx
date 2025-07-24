@@ -41,7 +41,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>🎒 ASU Calculator</h1>
-        <p>Web-based ASU crafting calculator with real-time updates. Brought to you by Soreven.</p>
+        <p>Brought to you by Soreven. Polar Bears ride or die. 🐻‍❄️🐻‍❄️🐻‍❄️</p>
       </header>
       
       <main>
